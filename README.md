@@ -61,7 +61,7 @@ This path is fully viable on **14.10 and below**. On 14.20 it is patched.
 
 ### Phase 2 — Canvas `getContext()` Reentrant UAF (CVE-2026-43720)
 
-After the FontFace path hit a wall, we pivoted to arnoldzap's documented **CVE-2026-43720** — a reentrant flaw in `HTMLCanvasElement::getContext()` that was originally exploited on PS5 14.10. The challenge was porting the technique to 14.20 where the memory layout and GPU surface allocator behavior differ.
+After the FontFace path hit a wall, we pivoted to pastawithpesto's documented **CVE-2026-43720** — a reentrant flaw in `HTMLCanvasElement::getContext()` that was originally exploited on PS5 14.10. The challenge was porting the technique to 14.20 where the memory layout and GPU surface allocator behavior differ.
 
 #### Root cause
 
