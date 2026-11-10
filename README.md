@@ -1,7 +1,7 @@
 # PS5 14.20 Jailbreak Research
 
-> Porting and extending [arnoldzap's PS5 14.10 WebKit research](https://github.com/arnoldzap/PS5-14.10-Jailbreak-Research) to firmware 14.20.  
-> Primary vector: **CVE-2026-43720** — `HTMLCanvasElement::getContext()` reentrant UAF on 768B Canvas2D context (technique originally documented by arnoldzap).
+> Porting and extending [pastawithpesto's PS5 14.10 WebKit research](https://github.com/pastawithpesto/PS5-14.10-Jailbreak-Research) to firmware 14.20.  
+> Primary vector: **CVE-2026-43720** — `HTMLCanvasElement::getContext()` reentrant UAF on 768B Canvas2D context (technique originally documented by pastawithpesto).
 
 **Chain status:** V573 ✅ → V630 ✅ → V674 🔄 → V701 ⏳ → V744 ⏳ → V788 ⏳ → V821 ⏳
 
@@ -11,10 +11,10 @@
 
 | | |
 |-|-|
-| **Original research & CVE-2026-43720 technique** | [arnoldzap](https://github.com/arnoldzap/PS5-14.10-Jailbreak-Research) |
+| **Original research & CVE-2026-43720 technique** | [pastawithpesto](https://github.com/pastawithpesto/PS5-14.10-Jailbreak-Research) |
 | **14.20 porting, V674 address table, bug fixes** | Knaphixis |
 
-> This repo builds directly on arnoldzap's probe scripts (v650.html AB forge technique, v573/v630 alias chain). If this work is useful to you, consider supporting the original research: [paypal.me/arnoldzap](https://paypal.me/arnoldzap)
+> This repo builds directly on arnoldzap's probe scripts (v650.html AB forge technique, v573/v630 alias chain). If this work is useful to you, check out the original repo: [pastawithpesto/PS5-14.10-Jailbreak-Research](https://github.com/pastawithpesto/PS5-14.10-Jailbreak-Research)
 
 ---
 
@@ -83,7 +83,7 @@ getContext('bitmaprenderer', opts)
 
 `innerCtx` (the JS wrapper returned from inside the getter) now points to a **freed 768B object**. The JS garbage collector does not know the C++ object is gone — the wrapper holds a raw pointer with no weak-ref or handle table indirection.
 
-**CVE-2026-43720** was originally documented by arnoldzap against PS5 14.10. Sony's patch in 14.22 adds a context-change guard that invalidates re-entrant `getContext()` calls while an outer `getContext()` is in progress — but 14.20 remains unpatched.
+**CVE-2026-43720** was originally documented by pastawithpesto against PS5 14.10. Sony's patch in 14.22 adds a context-change guard that invalidates re-entrant `getContext()` calls while an outer `getContext()` is in progress — but 14.20 remains unpatched.
 
 #### Why 768B matters
 
@@ -124,7 +124,7 @@ This confirms we have a stable read/write primitive into the freed 768B Canvas2D
 
 To build a raw arbitrary R/W primitive, we need a **second UAF** where an `ArrayBuffer(768)` reclaims the freed slot instead of a Canvas2D context. This gives us raw byte access to the same memory the dangling canvas wrapper reads.
 
-**Technique (from arnoldzap's v650.html):**
+**Technique (from pastawithpesto's v650.html):**
 
 1. Trigger a fresh UAF (second canvas, 1×1) → free another 768B slot
 2. Spray 200× `ArrayBuffer(768)` → one reclaims the freed slot
