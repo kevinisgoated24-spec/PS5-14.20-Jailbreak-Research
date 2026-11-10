@@ -86,8 +86,8 @@ Forge `m_stateStack.m_buffer` in a recycled ArrayBuffer to point at target addre
 
 ## PS5 Environment
 
-- PS5 IP: `192.168.1.177`
-- PC IP: `192.168.1.200`
+- PS5 IP: `<YOUR_PS5_IP>` (find in PS5 → Settings → Network → View Connection Status)
+- PC IP: `<YOUR_PC_IP>` (find with `ipconfig` on Windows)
 - HTTP log port: `8080`
 - Server: `server/https_server.py` (HTTP:8080 + HTTPS:443 dual)
 - Serve page: `exploit/fontface_serve.html` → loads `exploit/canvas_uaf.js`
