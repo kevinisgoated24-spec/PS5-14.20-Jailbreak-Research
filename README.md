@@ -14,7 +14,7 @@
 | **Original research & CVE-2026-43720 technique** | [pastawithpesto](https://github.com/pastawithpesto/PS5-14.10-Jailbreak-Research) |
 | **14.20 porting, V674 address table, bug fixes** | Knaphixis |
 
-> This repo builds directly on arnoldzap's probe scripts (v650.html AB forge technique, v573/v630 alias chain). If this work is useful to you, check out the original repo: [pastawithpesto/PS5-14.10-Jailbreak-Research](https://github.com/pastawithpesto/PS5-14.10-Jailbreak-Research)
+> This repo builds directly on pastawithpesto's probe scripts (v650.html AB forge technique, v573/v630 alias chain). If this work is useful to you, check out the original repo: [pastawithpesto/PS5-14.10-Jailbreak-Research](https://github.com/pastawithpesto/PS5-14.10-Jailbreak-Research)
 
 ---
 
@@ -22,6 +22,44 @@
 
 > ⚠️ **DO NOT UPDATE past 14.20** — firmware 14.22 patches the Canvas `getContext()` UAF chain.  
 > Keep auto-updates **OFF**: Settings → System → System Software → System Software Update and Settings
+
+---
+
+## What Is This? (Plain English)
+
+The PS5 runs a web browser. That browser is built on **WebKit** — the same engine that powers Safari on iPhones and Macs. Like any large piece of software, WebKit has bugs. This repo documents one specific bug (CVE-2026-43720) and how we're using it to gain deeper access to the PS5 system than Sony normally allows.
+
+**Why does this matter?**  
+A jailbreak lets you run unofficial software on your PS5 — custom firmware, homebrew games, emulators, debugging tools, or just owning the hardware you paid for without restrictions.
+
+**Is this permanent or online-safe?**  
+No. This is a browser-based exploit — it runs entirely through the PS5's web browser and doesn't survive a reboot. It also doesn't affect online functionality on its own. Sony patches these bugs over time through firmware updates, which is why staying on 14.20 matters.
+
+**What is a "UAF"?**  
+UAF stands for **Use-After-Free** — a type of memory bug. Here's the simple version:
+
+> Imagine you rent a hotel room (memory), check out (free it), but the front desk accidentally gives your key card to someone else (a new guest = new data) while you still have a copy of the key. You can now walk into someone else's room and read or change what's inside.
+
+That's essentially what this exploit does — a part of the PS5's browser engine frees a chunk of memory, but a JavaScript object we control still holds a reference to it. We then fill that freed memory with our own data, and read/write through the stale reference.
+
+**What's the current status?**  
+We've confirmed the core bug works on 14.20 and we have a working read/write channel into freed memory. We're currently scanning the PS5's memory map to find the base address of the browser process, which is the next step toward building a full control flow hijack.
+
+---
+
+## Technical Overview
+
+The exploit runs in stages, each building on the last:
+
+| Stage | Name | What it does | Status |
+|-------|------|-------------|--------|
+| V573 | Same-type reclaim | Spray Canvas2D contexts to reclaim freed 768B slot; detect alias via float sentinel | ✅ Done (slot=2) |
+| V630 | Bidirectional R/W | Confirm full read + write through dangling wrapper | ✅ Done |
+| V674 | AB forge crash-scan | Probe PS5 memory addresses by forging a pointer and catching crashes | 🔄 Running (v6) |
+| V701 | lineDash arb R/W | Forge Vector struct for arbitrary byte read/write to any address | ⏳ Pending |
+| V744 | Arbitrary write | Write shellcode or vtable pointer to known address | ⏳ Pending |
+| V788 | Type confusion | Confuse WebKit's type system to escalate access | ⏳ Pending |
+| V821 | vtable hijack + ROP | Redirect code execution through ROP gadget chain | ⏳ Pending |
 
 ---
 
