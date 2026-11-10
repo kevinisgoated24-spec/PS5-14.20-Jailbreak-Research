@@ -15,7 +15,7 @@
 - **Gigacage:** OFF
 - **libpas:** Out-of-band bitmap — AB backing stores share heap with JSC/WebCore objects
 
-> ⚠️ DO NOT UPDATE past 14.20 — firmware 14.22 patches the FontFace UAF chain.
+> ⚠️ DO NOT UPDATE past 14.20 — firmware 14.22 patches the Canvas getContext() UAF chain.
 > Keep auto-updates OFF: Settings → System → System Software → System Software Update and Settings
 
 ---
